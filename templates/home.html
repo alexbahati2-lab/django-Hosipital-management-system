@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Management System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #2C3E50;
+            color: white;
+            padding-top: 40px;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar a {
+            padding: 14px;
+            margin: 6px 20px;
+            text-decoration: none;
+            color: white;
+            border-radius: 6px;
+            background: #34495E;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #1ABC9C;
+        }
+
+        /* Slideshow watermark */
+        .slideshow {
+            position: fixed;
+            top: 0; left: 260px; /* leave sidebar */
+            width: calc(100% - 260px);
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .slideshow img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            filter: brightness(40%) blur(1px);
+        }
+
+        .slideshow img.active {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 60px;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .content h1 {
+            font-size: 32px;
+            color: #2C3E50;
+            margin-bottom: 15px;
+        }
+
+        .content p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* Department cards */
+        .dept-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .dept-card {
+            background: rgba(255, 255, 255, 0.9);
+            width: 180px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: #2C3E50;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .dept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            background: rgba(26, 188, 156, 0.9);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>HMS Access</h2>
+        <a href="{% url 'login' %}?next=/reception/">Reception</a>
+        <a href="{% url 'login' %}?next=/clinic/">Nursing</a>
+        <a href="{% url 'login' %}?next=/doctor/">Doctor</a>
+        <a href="{% url 'login' %}?next=/pharmacy/">Pharmacy</a>
+        <a href="{% url 'login' %}?next=/lab/">Laboratory</a>
+        <a href="{% url 'login' %}?next=/billing/">Billing / Accounts</a>
+        <a href="{% url 'login' %}?next=/admin/">Admin Panel</a>
+    </div>
+
+    <!-- Slideshow watermark -->
+    <div class="slideshow">
+        <img src="https://images.unsplash.com/photo-1588776814546-07f2e1adf5c0?auto=format&fit=crop&w=1350&q=80" class="active" alt="Hospital 1">
+        <img src="https://images.unsplash.com/photo-1588776814295-25a607c82d90?auto=format&fit=crop&w=1350&q=80" alt="Hospital 2">
+        <img src="https://images.unsplash.com/photo-1588776814167-01d09268e5a1?auto=format&fit=crop&w=1350&q=80" alt="Hospital 3">
+        <img src="https://images.unsplash.com/photo-1588776814000-bff5d1f8a2e1?auto=format&fit=crop&w=1350&q=80" alt="Hospital 4">
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+        <h1>🏥 Welcome to Hospital Management System</h1>
+        <p>Click on your Department below to enter.</p>
+
+        <div class="dept-cards">
+            <a href="{% url 'login' %}?next=/reception/" class="dept-card">Reception</a>
+            <a href="{% url 'login' %}?next=/clinic/" class="dept-card">Nursing</a>
+            <a href="{% url 'login' %}?next=/doctor/" class="dept-card">Doctor</a>
+            <a href="{% url 'login' %}?next=/pharmacy/" class="dept-card">Pharmacy</a>
+            <a href="{% url 'login' %}?next=/lab/" class="dept-card">Laboratory</a>
+            <a href="{% url 'login' %}?next=/billing/" class="dept-card">Billing / Accounts</a>
+            <a href="{% url 'login' %}?next=/admin/" class="dept-card">Admin Panel</a>
+        </div>
+    </div>
+
+    <!-- Slideshow JS -->
+    <script>
+        const slides = document.querySelectorAll('.slideshow img');
+        let current = 0;
+
+        setInterval(() => {
+            slides[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+        }, 5000); // Change slide every 5 seconds
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dispense History</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f6f7fb; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background: #4a76a8; color: white; }
+    </style>
+</head>
+<body>
+    <h2>Dispense History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Medicine</th>
+                <th>Quantity</th>
+                <th>Issued By</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for record in dispense_records %}
+            <tr>
+                <td>{{ record.patient.name }}</td>
+                <td>{{ record.medicine.name }}</td>
+                <td>{{ record.quantity }}</td>
+                <td>{{ record.issued_by.username }}</td>
+                <td>{{ record.date }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center;">No medicines issued yet</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="{% url 'pharmacy-home' %}">Back to Dashboard</a></p>
+</body>
+</html>

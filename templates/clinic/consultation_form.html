@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consultation</title>
+    <link rel="stylesheet" href="{% static 'clinic/style.css' %}">
+</head>
+<body class="light-theme" id="theme-body">
+
+<div class="container">
+
+    <button class="theme-toggle" onclick="toggleTheme()">Switch Theme</button>
+
+    <h2>Consultation for: {{ patient.full_name }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card">
+            <label>Notes:</label><br>
+            <textarea name="notes" rows="4" style="width:100%"></textarea><br><br>
+
+            <label>Diagnosis:</label><br>
+            <textarea name="diagnosis" rows="4" style="width:100%"></textarea><br><br>
+
+            <label>Treatment:</label><br>
+            <textarea name="treatment" rows="4" style="width:100%"></textarea><br><br>
+
+            <button type="submit" class="button">Save Consultation</button>
+        </div>
+    </form>
+
+</div>
+
+<script>
+function toggleTheme() {
+    let body = document.getElementById("theme-body");
+    let theme = body.classList.contains("light-theme") ? "dark-theme" : "light-theme";
+    body.className = theme;
+    localStorage.setItem("clinic-theme", theme);
+}
+
+document.getElementById("theme-body").className = localStorage.getItem("clinic-theme") || "light-theme";
+</script>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Billing Dashboard</title>
+    <style>
+        body { font-family: Arial; background: #f4f6f9; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        th { background: #2c3e50; color: white; }
+        tr:nth-child(even) { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Billing & Accounts Dashboard</h2>
+        <table>
+            <tr>
+                <th>Invoice #</th>
+                <th>Patient</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date Issued</th>
+            </tr>
+            {% for inv in invoices %}
+            <tr>
+                <td>{{ inv.id }}</td>
+                <td>{{ inv.patient.full_name }}</td>
+                <td>{{ inv.description }}</td>
+                <td>Ksh {{ inv.amount }}</td>
+                <td>{{ inv.is_paid|yesno:"Paid,Pending" }}</td>
+                <td>{{ inv.date_issued|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center;">No invoices yet.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Lab Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>🧪 Lab Dashboard</h2>
+    <p>Welcome to the Lab Section. Below are all pending test requests.</p>
+    <table class="table table-striped">
+        <tr>
+            <th>Patient</th>
+            <th>Test</th>
+            <th>Status</th>
+            <th>Requested By</th>
+        </tr>
+        {% for t in tests %}
+        <tr>
+            <td>{{ t.patient.name }}</td>
+            <td>{{ t.test.name }}</td>
+            <td>{{ t.status }}</td>
+            <td>{{ t.requested_by.username }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No test requests yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

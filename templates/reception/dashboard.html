@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reception Dashboard</title>
+    <style>
+        body { font-family: Arial; background: #f4f6f9; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
+        .menu a {
+            display: block;
+            padding: 10px;
+            background: #4A90E2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .menu a:hover { background: #357ABD; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Receptionist Dashboard</h2>
+        <div class="card menu">
+            <a href="{% url 'register_patient' %}">Register New Patient</a>
+            <a href="{% url 'patient_list' %}">View Patient Records</a>
+            <a href="{% url 'schedule_appointment' %}">Schedule Appointment</a>
+        </div>
+    </div>
+</body>
+</html>

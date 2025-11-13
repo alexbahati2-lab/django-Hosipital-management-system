@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f6f7fb; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background: #4a76a8; color: white; }
+        a { text-decoration: none; color: #4a76a8; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Doctor Dashboard</h2>
+    <p>Patients Waiting for Consultation</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Date Registered</th>
+                <th>Consult</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for patient in patients %}
+            <tr>
+                <td>{{ patient.name }}</td>
+                <td>{{ patient.age }}</td>
+                <td>{{ patient.date_registered }}</td>
+                <td><a href="{% url 'consult_patient' patient.id %}">Consult</a></td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;">No patients waiting</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

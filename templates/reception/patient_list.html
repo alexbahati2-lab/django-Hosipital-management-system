@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Records</title>
+    <style>
+        body { font-family: Arial; background: #eef2f7; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 6px; }
+        h2 { margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        th { background: #4A90E2; color: white; }
+        input[type="text"] { width: 60%; padding: 8px; border: 1px solid #aaa; border-radius: 5px; }
+        button { padding: 8px 14px; background: #4A90E2; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #357ABD; }
+        a.back-link { text-decoration: none; background: #4A90E2; padding: 7px 12px; color: white; border-radius: 4px; }
+        a.back-link:hover { background: #357ABD; }
+        a.queue-btn {
+            padding: 6px 10px;
+            background: #2D8A28;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        a.queue-btn:hover { background: #1f681c; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Patient Records</h2>
+
+    <a href="{% url 'reception_dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+    <form method="GET" style="margin-top: 15px;">
+        <input type="text" name="q" placeholder="Search by Name, Phone, or HMS No..." value="{{ query|default:'' }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>HMS No.</th>
+            <th>Full Name</th>
+            <th>Gender</th>
+            <th>Phone</th>
+            <th>Age</th>
+            <th>Date Registered</th>
+            <th>Action</th>
+        </tr>
+
+        {% for p in patients %}
+        <tr>
+            <td>{{ p.patient_id }}</td>
+            <td>{{ p.full_name }}</td>
+            <td>{{ p.gender }}</td>
+            <td>{{ p.phone }}</td>
+            <td>{{ p.age }}</td>
+            <td>{{ p.date_registered|date:"Y-m-d" }}</td>
+            <td>
+                <a class="queue-btn" href="{% url 'send_to_queue' p.id %}">Send to Queue</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" style="text-align:center;">No patients found.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

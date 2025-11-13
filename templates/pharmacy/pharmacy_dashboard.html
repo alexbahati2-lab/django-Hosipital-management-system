@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pharmacy Dashboard</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f6f7fb; }
+        a { text-decoration: none; color: #4a76a8; font-weight: bold; margin-right: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Pharmacy Dashboard</h2>
+    <p>Quick Links:</p>
+    <a href="{% url 'medicine-list' %}">View Medicines</a>
+    <a href="{% url 'issue-medicine' %}">Issue Medicine</a>
+    <a href="{% url 'dispense-history' %}">Dispense History</a>
+</body>
+</html>
