@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultation - {{ patient.full_name }}</title>
+    <link rel="stylesheet" href="{% static 'clinic/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f7fb;
+            margin: 0;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        h2 { color: #4a76a8; margin-bottom: 20px; }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        label { font-weight: bold; display: block; margin-top: 10px; margin-bottom: 6px; }
+        textarea { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; resize: vertical; }
+        .button {
+            background: #4a76a8;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .button:hover { background: #395f85; }
+        .theme-toggle {
+            float: right;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .theme-toggle:hover { background: #ddd; }
+        .dark-theme { background: #1e1e2f; color: #f1f1f1; }
+        .dark-theme .card { background: #2c2c3f; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .dark-theme textarea { background: #3c3c50; color: #f1f1f1; border: 1px solid #555; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; }
+        th { background: #4a76a8; color: white; text-align: left; }
+    </style>
+</head>
+<body class="light-theme" id="theme-body">
+
+<div class="container">
+
+    <button class="theme-toggle" onclick="toggleTheme()">Switch Theme</button>
+
+    <h2>Consultation for: {{ patient.full_name }}</h2>
+    <div class="card">
+        <p><strong>Age:</strong> {{ patient.age }} years</p>
+        <p><strong>Date Registered:</strong> {{ patient.date_registered|date:"M d, Y" }}</p>
+        <p><strong>Waiting Since:</strong> {{ patient.waiting_since|date:"M d, Y, P" }}</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" rows="4"></textarea>
+
+            <label for="diagnosis">Diagnosis</label>
+            <textarea id="diagnosis" name="diagnosis" rows="4"></textarea>
+
+            <label for="treatment">Treatment</label>
+            <textarea id="treatment" name="treatment" rows="4"></textarea>
+
+            <h3>Prescriptions</h3>
+            <div id="prescriptions">
+                <div>
+                    <input type="text" name="medicine[]" placeholder="Medicine Name">
+                    <input type="text" name="dosage[]" placeholder="Dosage">
+                    <input type="text" name="duration[]" placeholder="Duration">
+                </div>
+            </div>
+            <button type="button" class="button" onclick="addPrescription()">Add Another Medicine</button>
+
+            <h3>Lab Tests</h3>
+            <div id="lab-tests">
+                <input type="text" name="lab_test[]" placeholder="Test Name">
+            </div>
+            <button type="button" class="button" onclick="addLabTest()">Add Another Test</button>
+
+            <button type="submit" class="button">Save Consultation</button>
+        </div>
+    </form>
+
+    {% if consultations %}
+    <div class="card">
+        <h3>Past Consultations</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Notes</th>
+                <th>Diagnosis</th>
+                <th>Treatment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for consult in consultations %}
+            <tr>
+                <td>{{ consult.date|date:"M d, Y, P" }}</td>
+                <td>{{ consult.notes }}</td>
+                <td>{{ consult.diagnosis }}</td>
+                <td>{{ consult.treatment }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if lab_results %}
+    <div class="card">
+        <h3>Lab Results</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Test Name</th>
+                <th>Result</th>
+                <th>Technician</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for lab in lab_results %}
+            <tr>
+                <td>{{ lab.lab_request.test_name }}</td>
+                <td>{{ lab.result }}</td>
+                <td>{{ lab.technician.get_full_name }}</td>
+                <td>{{ lab.created_at|date:"M d, Y, P" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Back to Dashboard Button (ONLY ADDITION) -->
+    <div style="margin-top: 20px; text-align: left;">
+        <a href="{% url 'doctor_dashboard' %}" 
+           class="button" 
+           style="padding:6px 10px; font-size:0.85em; display:inline-block;">&larr; Back to Dashboard</a>
+    </div>
+
+</div>
+
+<script>
+function toggleTheme() {
+    let body = document.getElementById("theme-body");
+    let theme = body.classList.contains("light-theme") ? "dark-theme" : "light-theme";
+    body.className = theme;
+    localStorage.setItem("clinic-theme", theme);
+}
+document.getElementById("theme-body").className = localStorage.getItem("clinic-theme") || "light-theme";
+
+function addPrescription() {
+    const div = document.createElement('div');
+    div.innerHTML = '<input type="text" name="medicine[]" placeholder="Medicine Name"> ' +
+                    '<input type="text" name="dosage[]" placeholder="Dosage"> ' +
+                    '<input type="text" name="duration[]" placeholder="Duration">';
+    document.getElementById('prescriptions').appendChild(div);
+}
+
+function addLabTest() {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'lab_test[]';
+    input.placeholder = 'Test Name';
+    document.getElementById('lab-tests').appendChild(input);
+}
+</script>
+
+</body>
+</html>

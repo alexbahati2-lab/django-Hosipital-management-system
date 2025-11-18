@@ -37,10 +37,11 @@ INSTALLED_APPS = [
     "jazzmin",  # 👈 must be first
     'accounts',   # ✅ ADD THIS LINE
     'reception',
-    'clinic',
+    'doctor', 
     'pharmacy',
     'lab',  # ✅ new
     'billing',
+    'nursing', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -147,7 +148,6 @@ JAZZMIN_SETTINGS = {
         {"app": "reception"},
         {"app": "pharmacy"},
         {"app": "lab"},
-        {"app": "clinic"},
         {"app": "doctor"}, 
         {"app": "nursing"},
         {"app": "billing"}, 

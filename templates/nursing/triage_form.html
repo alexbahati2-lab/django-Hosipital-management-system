@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Triage Form - {{ triage.patient.full_name }}</title>
+    <link rel="stylesheet" href="{% static 'clinic/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #4a76a8;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .button {
+            background: #4a76a8;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background: #395f85;
+        }
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+            color: #4a76a8;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Dark theme */
+        .dark-theme {
+            background: #1e1e2f;
+            color: #f1f1f1;
+        }
+
+        .dark-theme .card {
+            background: #2c2c3f;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .dark-theme input, .dark-theme textarea {
+            background: #3c3c50;
+            color: #f1f1f1;
+            border: 1px solid #555;
+        }
+
+        .dark-theme .button {
+            background: #395f85;
+        }
+
+        .dark-theme .back-link {
+            color: #95c5ff;
+        }
+    </style>
+</head>
+<body class="light-theme" id="theme-body">
+
+<div class="container">
+
+    <!-- Back to Nursing Dashboard -->
+    <a href="{% url 'nursing_dashboard' %}" class="back-link">&larr; Back to Nursing Dashboard</a>
+
+    <h2>Triage Form: {{ triage.patient.full_name }}</h2>
+
+    <div class="card">
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="temperature">Temperature</label>
+            <input type="text" name="temperature" id="temperature" value="{{ triage.temperature }}">
+
+            <label for="blood_pressure">Blood Pressure</label>
+            <input type="text" name="blood_pressure" id="blood_pressure" value="{{ triage.blood_pressure }}">
+
+            <label for="pulse_rate">Pulse Rate</label>
+            <input type="text" name="pulse_rate" id="pulse_rate" value="{{ triage.pulse_rate }}">
+
+            <label for="weight">Weight</label>
+            <input type="text" name="weight" id="weight" value="{{ triage.weight }}">
+
+            <label for="symptoms">Symptoms / Notes</label>
+            <textarea name="symptoms" id="symptoms" rows="4">{{ triage.symptoms }}</textarea>
+
+            <!-- Button sends patient to doctor -->
+            <button type="submit" class="button">Send to Doctor</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+function toggleTheme() {
+    const body = document.getElementById("theme-body");
+    const theme = body.classList.contains("light-theme") ? "dark-theme" : "light-theme";
+    body.className = theme;
+    localStorage.setItem("clinic-theme", theme);
+}
+
+// Load saved theme
+document.getElementById("theme-body").className = localStorage.getItem("clinic-theme") || "light-theme";
+</script>
+
+</body>
+</html>

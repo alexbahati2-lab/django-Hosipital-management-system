@@ -10,8 +10,11 @@ urlpatterns = [
     # Reception App
     path('reception/', include('reception.urls')),
 
-    # Clinic (Nursing) App
-    path('clinic/', include('clinic.urls')),
+     #nursing app
+    path('nursing/', include('nursing.urls')),  
+
+     #doctor app
+    path('doctor/', include('doctor.urls')),
 
     # Pharmacy App
     path('pharmacy/', include('pharmacy.urls')),

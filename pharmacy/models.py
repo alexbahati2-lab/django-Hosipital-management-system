@@ -1,7 +1,15 @@
 from django.db import models
 from django.conf import settings
-
 from reception.models import Patient  # your patient model
+
+class Prescription(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    medicine = models.CharField(max_length=255)
+    instructions = models.TextField(blank=True)
+    issued_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.patient.name} prescription"
 
 class Medicine(models.Model):
     name = models.CharField(max_length=255)
@@ -14,7 +22,6 @@ class DispenseRecord(models.Model):
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     issued_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-
     date = models.DateTimeField(auto_now_add=True)
 
 class Supplier(models.Model):

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            background: #2c3e50;
+            padding: 15px 20px;
+            border-radius: 6px;
+            color: white;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a {
+            color: #ffe082;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        h2 {
+            margin: 0;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .patients-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .patient-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .patient-card h3 {
+            margin: 0 0 6px 0;
+            color: #2980b9;
+        }
+
+        .patient-card p {
+            margin: 3px 0;
+            color: #555;
+        }
+
+        .consult-btn {
+            display: inline-block;
+            background: #2980b9;
+            padding: 8px 12px;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .consult-btn:hover {
+            background: #1f6692;
+        }
+
+        .no-patients {
+            color: #777;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Recent consultations table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background: #2c3e50;
+            color: white;
+            text-align: left;
+        }
+
+        table tr:hover {
+            background: #f4f6f9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <h2>Doctor Dashboard</h2>
+        <a href="{% url 'home' %}">← Back to Home</a>
+    </header>
+
+    <!-- SECTION 1: QUEUE FROM NURSING -->
+    <section>
+        <div class="section-title">Patients Sent From Nursing</div>
+
+        {% if queue_patients %}
+        <div class="patients-container">
+            {% for patient in queue_patients %}
+            <div class="patient-card">
+                <h3>{{ patient.full_name }}</h3>
+                <p><strong>Age:</strong> {{ patient.age }}</p>
+                <p><strong>Registered:</strong> {{ patient.date_registered|date:"M d, Y" }}</p>
+
+                <a class="consult-btn" href="{% url 'consult_patient' patient.id %}">Consult Now</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-patients">No patients waiting from Nursing</p>
+        {% endif %}
+    </section>
+
+    <!-- SECTION 2: TODAY'S APPOINTMENTS -->
+    <section>
+        <div class="section-title">Today's Direct Appointments</div>
+
+        {% if todays_appointments %}
+        <div class="patients-container">
+            {% for entry in todays_appointments %}
+            <div class="patient-card">
+                <h3>{{ entry.patient.full_name }}</h3>
+                <p><strong>Reason:</strong> {{ entry.reason }}</p>
+                <p><strong>Time:</strong> {{ entry.time|date:"H:i" }}</p>
+
+                <a class="consult-btn" href="{% url 'consult_patient' entry.patient.id %}">
+                    Start Appointment
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-patients">No appointments booked for today</p>
+        {% endif %}
+    </section>
+
+    <!-- SECTION 3: RECENT CONSULTATIONS -->
+    <section>
+        <div class="section-title">Recent Consultations</div>
+
+        {% if recent_consultations %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Diagnosis</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for consult in recent_consultations %}
+                <tr>
+                    <td>{{ consult.patient.full_name }}</td>
+                    <td>{{ consult.diagnosis|default:"—" }}</td>
+                    <td>{{ consult.created_at|date:"M d, Y P" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-patients">No recent consultations</p>
+        {% endif %}
+    </section>
+
+</body>
+</html>

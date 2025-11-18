@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nursing Dashboard</title>
+    <link rel="stylesheet" href="{% static 'clinic/style.css' %}">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; transition: background 0.3s, color 0.3s; }
+        .container { max-width: 1200px; margin: auto; }
+        h2, h3 { color: #4a76a8; margin-bottom: 15px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #4a76a8; color: white; }
+        .button { background: #4a76a8; color: white; border: none; padding: 10px 16px; border-radius: 5px; cursor: pointer; font-weight: bold; text-decoration: none; }
+        .button:hover { background: #395f85; }
+        .theme-toggle { float: right; background: #f0f0f0; color: #333; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+        .theme-toggle:hover { background: #ddd; }
+        .status-awaiting { color: #d9534f; font-weight: bold; }
+        .status-in_progress { color: #f0ad4e; font-weight: bold; }
+        .status-done { color: #5cb85c; font-weight: bold; }
+        .status-sent_to_doctor { color: #0275d8; font-weight: bold; }
+        .dark-theme { background: #1e1e2f; color: #f1f1f1; }
+        .dark-theme .card { background: #2c2c3f; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .dark-theme table, .dark-theme th, .dark-theme td { color: #f1f1f1; }
+        .dark-theme th { background: #395f85; }
+        .small-button { font-size:0.85em; padding:6px 10px; display:inline-block; margin-bottom: 15px; }
+    </style>
+</head>
+<body class="light-theme" id="theme-body">
+<div class="container">
+
+    <button class="theme-toggle" onclick="toggleTheme()">Switch Theme</button>
+
+    <h2>Nursing Dashboard</h2>
+
+    <!-- Back to Home -->
+    <a href="{% url 'home' %}" class="button small-button">&larr; Back to Home</a>
+
+    <!-- Waiting Patients -->
+    <div class="card">
+        <h3>Patients Waiting</h3>
+        {% if waiting_patients %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Date Added</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in waiting_patients %}
+                <tr>
+                    <td>{{ patient.patient.full_name }}</td>
+                    <td>{{ patient.added_at|date:"M d, Y, P" }}</td>
+                    <td><a href="{% url 'start_triage' patient.patient.id %}" class="button">Start Triage</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No patients waiting at the moment.</p>
+        {% endif %}
+    </div>
+
+    <!-- Patients Currently in Triage -->
+    <div class="card">
+        <h3>Patients Being Triaged</h3>
+        {% if triaging %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for triage in triaging %}
+                <tr>
+                    <td>{{ triage.patient.full_name }}</td>
+                    <td class="status-{{ triage.status }}">{{ triage.get_status_display }}</td>
+                    <td><a href="{% url 'triage_form' triage.id %}" class="button">Continue</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No patients are currently being triaged.</p>
+        {% endif %}
+    </div>
+
+    <!-- Recently Sent to Doctor -->
+    <div class="card">
+        <h3>Recently Sent to Doctor</h3>
+        {% if recently_sent %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Sent At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for triage in recently_sent %}
+                <tr>
+                    <td>{{ triage.patient.full_name }}</td>
+                    <td>{{ triage.date_taken|date:"M d, Y, P" }}</td>
+                    <td><a href="{% url 'triage_form' triage.id %}" class="button">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No patients have been sent to doctors recently.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+function toggleTheme() {
+    let body = document.getElementById("theme-body");
+    let theme = body.classList.contains("light-theme") ? "dark-theme" : "light-theme";
+    body.className = theme;
+    localStorage.setItem("clinic-theme", theme);
+}
+document.getElementById("theme-body").className = localStorage.getItem("clinic-theme") || "light-theme";
+</script>
+</body>
+</html>
