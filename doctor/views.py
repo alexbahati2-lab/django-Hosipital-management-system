@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from reception.models import Patient, WaitingList, Appointment
 from .models import Consultation, Prescription, LabRequest
 from lab.models import LabResult
+from nursing.models import Triage
+
 
 
 # -------------------------------------------------------------------
@@ -25,18 +27,20 @@ def doctor_dashboard(request):
     if not doctor_only(request.user):
         return redirect("home")
 
-    # 🟩 1. Patients sent from Nursing
-    waiting_entries = WaitingList.objects.filter(
+    # 1️⃣ Patients sent from Nursing
+    waiting_entries = Triage.objects.filter(
         status="sent_to_doctor"
-    ).select_related("patient").order_by("-timestamp")
+    ).select_related("patient").order_by("-date_taken")
 
     queue_patients = [entry.patient for entry in waiting_entries]
 
-    # 🟦 2. Direct appointments for today
+    # 2️⃣ Direct appointments for today
     today = date.today()
-    todays_appointments = Appointment.objects.filter(date=today).select_related("patient")
+    todays_appointments = Appointment.objects.filter(
+        date=today
+    ).select_related("patient")
 
-    # 🟧 3. Recent consultations (by this doctor)
+    # 3️⃣ Recent consultations by this doctor
     recent_consultations = Consultation.objects.filter(
         doctor=request.user
     ).order_by("-created_at")[:10]
@@ -48,7 +52,6 @@ def doctor_dashboard(request):
     }
 
     return render(request, "doctor/doctor_dashboard.html", context)
-
 
 # -------------------------------------------------------------------
 # ✅ CONSULT PATIENT
@@ -104,10 +107,11 @@ def consult_patient(request, patient_id):
                 )
 
         # ✔ Remove patient from doctor queue if they came via Nursing
-        WaitingList.objects.filter(
-            patient=patient,
-            status="sent_to_doctor"
-        ).delete()
+        Triage.objects.filter(
+    patient=patient,
+    status="sent_to_doctor"
+).update(status="done")
+
 
         return redirect("doctor_dashboard")
 

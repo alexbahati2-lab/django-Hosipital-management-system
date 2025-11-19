@@ -6,4 +6,5 @@ urlpatterns = [
     path('medicines/', views.medicine_list, name='medicine-list'),
     path('issue/', views.issue_medicine, name='issue-medicine'),
     path('history/', views.dispense_history, name='dispense-history'),
+    path('add/', views.add_medicine, name='add-medicine'),  # <-- make sure this exists
 ]

@@ -5,10 +5,12 @@ from django.contrib.auth.models import User
 from reception.models import Patient  # assuming patients are in reception app
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from .forms import MedicineForm
 
 @login_required
 def pharmacy_home(request):
-    return render(request, 'pharmacy/pharmacy.html')
+    return render(request, 'pharmacy/pharmacy_dashboard.html')
+
 
 @login_required
 def medicine_list(request):
@@ -42,11 +44,12 @@ def issue_medicine(request):
 
         # Record the issue (using Sale model as dispense record)
         DispenseRecord.objects.create(
+            patient=patient,
             medicine=medicine,
             quantity=quantity,
-            sold_by=request.user,  # user who issued
+            issued_by=request.user,  # use the correct field name
             date=timezone.now()
-        )
+          )
 
         return redirect('dispense-history')
 
@@ -56,3 +59,13 @@ def issue_medicine(request):
 def dispense_history(request):
     records =  DispenseRecord.objects.all().order_by('-date')  # latest first
     return render(request, 'pharmacy/dispense_history.html', {'dispense_records': records})
+
+def add_medicine(request):
+    if request.method == "POST":
+        form = MedicineForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('medicine-list')
+    else:
+        form = MedicineForm()
+    return render(request, 'pharmacy/add_medicine.html', {'form': form})

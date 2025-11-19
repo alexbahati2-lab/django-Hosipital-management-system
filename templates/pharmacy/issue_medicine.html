@@ -3,28 +3,73 @@
 <head>
     <title>Issue Medicine</title>
     <style>
-        body { font-family: Arial; padding: 20px; background: #f6f7fb; }
-        form { background: white; padding: 20px; width: 500px; border-radius: 5px; }
-        label { display: block; margin-top: 10px; }
-        select, input { width: 100%; padding: 8px; margin-top: 5px; }
-        button { margin-top: 15px; padding: 10px 15px; background: #4a76a8; color: white; border: none; cursor: pointer; }
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f6f7fb; 
+        }
+        form { 
+            background: white; 
+            padding: 20px; 
+            width: 500px; 
+            border-radius: 5px; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        label { 
+            display: block; 
+            margin-top: 10px; 
+            font-weight: bold;
+        }
+        select, input { 
+            width: 100%; 
+            padding: 8px; 
+            margin-top: 5px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px;
+        }
+        button { 
+            margin-top: 15px; 
+            padding: 10px 15px; 
+            background: #4a76a8; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        button:hover {
+            background: #3b5d84;
+        }
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            color: #4a76a8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <h2>Issue Medicine</h2>
     <form method="POST">
         {% csrf_token %}
+        
         <label>Patient:</label>
-        <select name="patient">
+        <select name="patient" required>
             {% for patient in patients %}
                 <option value="{{ patient.id }}">{{ patient.name }} ({{ patient.id }})</option>
             {% endfor %}
         </select>
 
         <label>Medicine:</label>
-        <select name="medicine">
+        <select name="medicine" required>
             {% for med in medicines %}
-                <option value="{{ med.id }}">{{ med.name }} - Available: {{ med.quantity }}</option>
+                <option value="{{ med.id }}">
+                    {{ med.name }} - Available: {{ med.quantity }}
+                    {% if med.supplier %} (Supplier: {{ med.supplier.name }}){% endif %}
+                </option>
             {% endfor %}
         </select>
 
@@ -33,6 +78,7 @@
 
         <button type="submit">Issue Medicine</button>
     </form>
-    <p><a href="{% url 'pharmacy-home' %}">Back to Dashboard</a></p>
+
+    <p><a href="{% url 'pharmacy-home' %}">← Back to Dashboard</a></p>
 </body>
 </html>

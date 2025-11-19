@@ -4,6 +4,13 @@ from reception.models import Patient
 
 User = get_user_model()
 
+STATUS_CHOICES = [
+    ('waiting', 'Waiting'),
+    ('in_progress', 'In Progress'),
+    ('completed', 'Completed'),
+]
+
+
 
 class Consultation(models.Model):
     patient = models.ForeignKey(
@@ -22,6 +29,7 @@ class Consultation(models.Model):
     diagnosis = models.TextField(blank=True, null=True)
     treatment = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='waiting')
 
     class Meta:
         ordering = ['-created_at']

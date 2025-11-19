@@ -27,7 +27,13 @@
                 <td>{{ med.name }}</td>
                 <td>{{ med.quantity }}</td>
                 <td>{{ med.price }}</td>
-                <td>{{ med.supplier.name if med.supplier }}</td>
+                <td>
+                    {% if med.supplier %}
+                        {{ med.supplier.name }}
+                    {% else %}
+                        No supplier
+                    {% endif %}
+                </td>
             </tr>
         {% empty %}
             <tr>
@@ -36,5 +42,8 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <!-- Back to Dashboard button -->
+    <p><a href="{% url 'pharmacy-home' %}">← Back to Dashboard</a></p>
 </body>
 </html>

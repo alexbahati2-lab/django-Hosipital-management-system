@@ -3,15 +3,89 @@
 <head>
     <title>Pharmacy Dashboard</title>
     <style>
-        body { font-family: Arial; padding: 20px; background: #f6f7fb; }
-        a { text-decoration: none; color: #4a76a8; font-weight: bold; margin-right: 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background: #eef1f7;
+            margin: 0;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            background: #4a76a8;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .card a {
+            display: block;
+            padding: 10px;
+            color: #4a76a8;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 15px;
+        }
     </style>
 </head>
 <body>
-    <h2>Pharmacy Dashboard</h2>
-    <p>Quick Links:</p>
-    <a href="{% url 'medicine-list' %}">View Medicines</a>
-    <a href="{% url 'issue-medicine' %}">Issue Medicine</a>
-    <a href="{% url 'dispense-history' %}">Dispense History</a>
+
+    <div class="header">
+        <a href="{% url 'home' %}" class="back-btn">← Back</a>
+        <h2>Pharmacy Dashboard</h2>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <a href="{% url 'medicine-list' %}">View Medicines</a>
+        </div>
+
+        <div class="card">
+            <a href="{% url 'add-medicine' %}">Add Medicine</a>
+        </div>
+
+        <div class="card">
+            <a href="{% url 'issue-medicine' %}">Issue Medicine</a>
+        </div>
+
+        <div class="card">
+            <a href="{% url 'dispense-history' %}">Dispense History</a>
+        </div>
+    </div>
+
 </body>
 </html>
