@@ -9,7 +9,8 @@ SECRET_KEY = 'django-insecure-*i5k978@le&vfxejb3fyc#h@!-!a9=6%og8pk8$uiwz6qq8re$
 DEBUG = False
 
 # Allow Render domains
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["hms-9ovy.onrender.com", "localhost", "127.0.0.1"]
+
 
 
 # Application definition
