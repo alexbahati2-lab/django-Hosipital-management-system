@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Light / Blue Theme */
+.light-theme {
+    background: #eef5ff;
+    color: #1f3a5f;
+}
+
+.light-theme .card {
+    background: white;
+    border-left: 4px solid #4A90E2;
+}
+
+/* Dark Theme */
+.dark-theme {
+    background: #1b1f24;
+    color: #d6dbe3;
+}
+
+.dark-theme .card {
+    background: #23272f;
+    border-left: 4px solid #6bb6ff;
+}
+
+/* Shared styling */
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.button {
+    background: #4A90E2;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #357ABD;
+}
+
+.theme-toggle {
+    float: right;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #4A90E2;
+    color: white;
+}
